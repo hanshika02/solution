@@ -1,0 +1,89 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>Coordinates on CANVAS</title>
+    <meta charset="utf-8" />
+
+    <style type="text/css">
+
+    </style>
+
+    <script type="text/javascript">
+	  var i=1;
+      document.addEventListener("DOMContentLoaded", init, false);
+
+      function init()
+      {
+        var canvas = document.getElementById("canvas");
+        canvas.addEventListener("mousedown", getPosition, false);
+      }
+      var r=1; var prevR=new Number();
+	  var currX = new Number();
+      var prevX = new Number();
+      var currY = new Number();
+      var prevY = new Number();
+      function getPosition(event)
+      {
+        var canvas = document.getElementById("canvas");
+
+        if (event.x != undefined && event.y != undefined)
+        {
+          currX = event.x;
+          currY = event.y;
+        }
+        else // Firefox method to get the position
+        {
+          currX = event.clientX + document.body.scrollLeft +
+              document.documentElement.scrollLeft;
+          currY = event.clientY + document.body.scrollTop +
+              document.documentElement.scrollTop;
+        }
+
+        currX -= canvas.offsetLeft;
+        currY -= canvas.offsetTop;
+		
+	//	alert("currX: " + currX + "  currY: " + currY);
+//		alert("prevX: " + prevX + "  prevY: " + prevY);
+		var ctx=canvas.getContext("2d");
+		ctx.beginPath();
+		ctx.arc(currX,currY,1,0,2*Math.PI);
+		ctx.closePath();
+		ctx.stroke();
+		if(prevX==currX && prevY==currY)
+		{
+		        ctx.clearRect(currX-r-1,currY-r-1,prevR*2+2,prevR*2+2);
+				ctx.closePath();
+		}
+		else
+		{
+		 		if(i>1)
+				{
+				var x=new Number();
+				x=(prevX-currX)*(prevX-currX);
+				var y=new Number();
+				y=(prevY-currY)*(prevY-currY);
+				r=Math.sqrt(x+y)
+//				alert("r:"+r);
+				var x1=(currX+prevX)/2;
+				var y1=(currY+prevY)/2;
+				ctx.beginPath();
+				ctx.arc(x1,y1,r/2,0,2*Math.PI,true);
+				ctx.closePath();
+				ctx.stroke();
+				}
+		}
+		prevX=currX;
+		prevY=currY;
+		prevR=r;
+		i++;
+      }
+
+    </script>
+
+  </head>
+
+  <body>
+    <canvas id="canvas" width="1260" height="655"></canvas>
+  </body>
+</html>
